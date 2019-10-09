@@ -1,0 +1,29 @@
+C Procedural Language
+Dennis Ritchie
+
+
+C language Standard
+What is C standard?
+
+" 
+
+  The latest C standard is ISO/IEC 9899:2011, also known as C11 as the final draft was published in 2011.
+  Before C11, there was C99. The C11 final draft is available here ( http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf )
+  See this for complete history of C standards.
+
+" @geksforgeeks
+
+
+
+#Read line
+https://www.geeksforgeeks.org/taking-string-input-space-c-3-different-methods/
+
+char * fgets (char * dest, int size, FILE * stream);
+int scanf (const char * format, ...);
+
+scanf("%c",&ch);
+scanf("\n");
+
+scanf("%[^\n]%*c",&s);
+scanf("\n");
+
