@@ -27,3 +27,213 @@ scanf("\n");
 scanf("%[^\n]%*c",&s);
 scanf("\n");
 
+
+
+
+C Notes for Professionals:
+13/11/2019
+
+Version Standard Publication Date
+K&R n/a 1978-02-22
+C89 ANSI X3.159-1989 1989-12-14
+C90 ISO/IEC 9899:1990 1990-12-20
+C95 ISO/IEC 9899/AMD1:1995 1995-03-30
+C99 ISO/IEC 9899:1999 1999-12-16
+C11 ISO/IEC 9899:2011 2011-12-15
+
+
+
+Compile using GCC
+GCC (GNU Compiler Collection) is a widely used C compiler. To use it, open a terminal, use the command line to
+navigate to the source file's location and then run:
+gcc hello.c -o hello
+If no errors are found in the the source code (hello.c), the compiler will create a binary file, the name of which is
+given by the argument to the -o command line option (hello). This is the final executable file.
+
+
+
+#warnings
+gcc -Wall -Wextra -Werror -o hello hello.c
+
+
+
+#main
+The recommended and most portable form of main for hosted systems is int main (void) when the program does
+not use any command line arguments, or int main(int argc, char **argv) when the program does use the
+command line arguments.
+
+
+
+
+#comment
+
+Section 2.1: Commenting using the preprocessor
+Large chunks of code can also be "commented out" using the preprocessor directives #if 0 and #endif. This is
+useful when the code contains multi-line comments that otherwise would not nest.
+#if 0 /* Starts the "comment", anything from here on is removed by preprocessor */
+/* A large amount of code with multi-line comments */
+int foo()
+{
+/* lots of code */
+...
+/* ... some comment describing the if statement ... */
+if (someTest) {
+/* some more comments */
+return 1;
+}
+return 0;
+}
+#endif /* 0 */
+/* code from here on is "uncommented" (included in compiled executable) */
+
+
+
+Section 2.4: Possible pitfall due to trigraphs
+Version ≥ C99
+While writing // delimited comments, it is possible to make a typographical error that affects their expected
+operation. If one types:
+
+GoalKicker.com – C Notes for Professionals 8
+int x = 20; // Why did I do this??/
+The / at the end was a typo but now will get interpreted into \. This is because the ??/ forms a trigraph.
+The ??/ trigraph is actually a longhand notation for \, which is the line continuation symbol. This means that the
+compiler thinks the next line is a continuation of the current line, that is, a continuation of the comment, which may
+not be what is intended.
+int foo = 20; // Start at 20 ??/
+int bar = 0;
+// The following will cause a compilation error (undeclared variable 'bar')
+// because 'int bar = 0;' is part of the comment on the preceding line
+bar += foo;
+
+
+
+
+~~~~~~~
+Operator Relative Precedence Associativity
+[] (array subscription) 1 Left-to-right
+() (function call) 1 Left-to-right
+* (dereference) 2 Right-to-left
+
+
+Expression Interpretation
+thing[X] an array of size X of...
+thing(t1, t2, t3) a function taking t1, t2, t3 and returning...
+*thing a pointer to...
+
+example
+
+
+Array of Pointer
+shardulind@advaita:~/CNotes$ cat array_of_pointer.c 
+#include<stdio.h>
+
+int main(void)
+{
+	char *names[20];
+	char a='a';
+	char b='b';
+	names[0] = &a;
+	names[1] =&b;
+
+	printf("%c",*names[0]);
+	return 0;
+}
+
+
+
+Pointer to an Array
+shardulind@advaita:~/CNotes$ cat pointer_to_an_array.c 
+#include<stdio.h>
+
+int main(void)
+{
+	char (*place)[10];
+	char arr[10] = {'S','H','A','R'};
+	place = &arr;
+	printf("%s",*place);
+	return 0;
+
+}
+shardulind@advaita:~/CNotes$ 
+
+
+
+
+Pointer to function
+shardulind@advaita:~/CNotes$ cat pointer_to_function.c 
+#include<stdio.h>
+
+int add(void)
+{
+	printf("Mi called zhalo");
+	return -99;
+}
+
+int (*fn)(void);
+
+
+
+int main(void)
+{
+	fn = &add;
+	fn();
+	printf("\n%d",fn());
+	return 0;
+}
+shardulind@advaita:~/CNotes$
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#multiple_declaration
+Multiple Declarations
+The comma can be used as a separator (*not* acting like the comma operator) in order to delimit multiple
+declarations within a single statement. The following statement contains five declarations:
+int fn(void), *ptr, (*fp)(int), arr[10][20], num;
+The declared objects in the above example are:
+fn: a function taking void and returning int;
+ptr: a pointer to an int;
+fp: a pointer to a function taking int and returning int;
+arr: an array of size 10 of an array of size 20 of int;
+num: int.
+
+
+________________________________________________________________________________________________
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Different types of integer constants (called literals in C jargon) can be written in different bases, and different width,
+based on their prefix or suffix.
+/* the following variables are initialized to the same value: */
+int d = 42; /* decimal constant (base10) */
+int o = 052; /* octal constant (base8) */
+int x = 0xaf; /* hexadecimal constants (base16) */
+int X = 0XAf; /* (letters 'a' through 'f' (case insensitive) represent 10 through 15) */
+Decimal constants are always signed. Hexadecimal constants start with 0x or 0X and octal constants start just with
+a 0. The latter two are signed or unsigned depending on whether the value fits into the signed type or not.
+
+
+___________________________________________________________________________________________
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Strings are not modifiable
+
+String literals are not modifiable (and in fact may be placed in read-only memory such as .rodata). Attempting to
+alter their values results in undefined behaviour.
+char* s = "foobar";
+s[0] = 'F'; /* undefined behaviour */
+/* it's good practice to denote string literals as such, by using `const` */
+char const* s1 = "foobar";
+s1[0] = 'F'; /* compiler error! */
+
+
+--------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+UTF-8 text format string literal
+
+
+/* UTF-8 string literal, of type char[] */
+char* s3 = u8"abc";
+
+--------------------------------------------------------------
+__________________________________________________________________
